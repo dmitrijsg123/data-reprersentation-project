@@ -1,4 +1,5 @@
 
+
 import mysql.connector
 
 class StockDao:
@@ -61,9 +62,12 @@ class StockDao:
         return stock
         
     def delete(self,Item_number):
-        return{}
-        
-        
+        cursor = self.db.cursor()
+        sql = "DELETE FROM STOCK WHERE Item_number = %s"
+        values = [Item_number]
+        cursor.execute(sql,values)
+
+        return {}
     
     def convertToDict(self,result):
         colnames = ['Item_number','Item_name','supplier','Price']
