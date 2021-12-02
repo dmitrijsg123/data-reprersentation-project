@@ -1,17 +1,178 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Генеологический сайт Гавиловский Мателенок Кальчук Гугало Стацевич</title>
+  <style>
 
+ul li a{
+text-decoration:none;
+font-family: Georgia, Times New Roman;
+font-size:18px;
+background-color:aquamarine;
+color: green;
+display:block;
+font-weight:bolder;
+width:140px;
+margin:5px;
+padding:15px;
+border-color: red;
+border-width: 2px;
+border-style: solid;
+border-radius:20px;
+text-align:center;
+height:15px;
+line-height:15px;
+margin-left:100px;
+margin-top:30px;
+margin-left:85px;
+margin-bottom: 30px;
+}
+
+body{
+background-color: turquoise;
+border-color: turquoise;
+}
+
+ul li a:hover{
+background:linear-gradient(coral, yellow); color:black;
+font-size:1.15em;   
+}
+
+#imagetree{
+background-color:silver;
+padding:15px;
+border-color: green;
+border-width: 2px;
+border-style:double;
+border-radius:5px;
+margin-left:80px;
+}
+
+.responsive {
+  max-width:100%;
+  height:auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer{
+  text-align: center;
+  font-size: 15px;
+}
+
+@media(min-width: 1000px){
+  #foot{
+    display: none;
+  }
+}
+
+@media(max-width: 400px){
+ul li a{
+    width: 140px;
+    margin-left:20px;
+
+  }
+}
+
+#navbar {
+  overflow:hidden;
+  background-color: green;
+  margin-left:80px;
+  margin-right:72px;
+  margin-top:30px;
+}
+
+@media(max-width: 450px){
+  #navbar {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media(max-width: 550px){
+  #imagetree {
+    margin-left:0px;
+    margin-right: auto;
+  }
+}
+
+
+
+h1{
+  color:green;
+}
+
+#topheading{
+  background-image:url(derevnja7.png);  
+  margin-left:80px;
+  margin-right:73px;
+  margin-bottom:30px;
+  background-size: cover;
+}
+
+@media(max-width: 500px){
+  #topheading {
+    width:max-content;
+    margin-left: 0px;
+    margin-right:40px;
+  }
+}
+
+#derevnja7.png{
+  max-width:100%;
+  height:auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul.sticky {
+  position:-webkit-sticky;
+  position:sticky;
+  top:0;
+}
+
+</style>
 </head>
-
 <body>
 
-Hello there
+
+  <div id="topheading">
+    <br>
+        <h1 style="color: black; font-size: 30px;">Фамильное древо Гавиловских</h1>  
+        <br><br>
+  </div>
+<div>               
+<ul class="sticky" id="navbar">
+    <li><a href="Familii.html">Фамилии</a></li>
+    <li><a href="derevni.html">Деревни</a></li> 
+    <li><a href="fotogalereja.html">Фотогалерея</a></li>
+    <li><a href="vospominanija.html">Воспоминания</a></li>
+    <li><a href="adresa.html">Адреса</a></li>
+    <li><a href="novosti.html">Новости</a></li>  <br><br>
+</ul>
+<br><br>
+</div>
+  
+<div>
+<a><img id="imagetree" class="responsive" src="predkidaniel3.png" width="1688" height="4288" title="Фамильное древо"></a>
+</div>
+
+<footer>
+  <p id="foot">Gavilovskifamilytree | All Rights Reserved.
+ <br> dmitrijsg123@gmail.com</p>
+</footer>
 
 </body>
 
-
-
-
-
 </html>
+
+
+
+
+    
+    
