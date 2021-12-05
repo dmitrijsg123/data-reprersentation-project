@@ -1,20 +1,20 @@
 
 <html>
 <head>
-	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>  
 </head>
 
 <body>
 	<div id="cre-ed" style="display:none">
 	<h3>Create and edit section</h3>
-		<table>
+		<table id="creEdForm">
 			<tr>
 				<td>Item-number</td>
-				<td><input type="number" name="Item-number"></td>
+				<td><input type="number" name="Item_number"></td>
 			</tr>
 			<tr>
 				<td>Item-name</td>
-				<td><input type="text" name="Item-name"></td>
+				<td><input type="text" name="Item_name"></td>
 			</tr>
 			<tr>
 				<td>supplier</td>
@@ -25,37 +25,63 @@
 				<td><input type="currency" name="Price"></td>
 			</tr>
 			<tr>
-				<td></td><td><button id="cre-ed-button">go</button></td>
+				<td></td><td><button id="cre-button" onclick="doCreate()">Create</button></td>
 			</tr>
 		</table>
 	</div>
 	<div id="show">
 		<h2>All stock</h2>
-		<table id="all_stock" class="items">
-			<tr>
-				<th>Item-number</th><th>Item-name</th><th>supplier</th><th>Price</th><th></th><th></th>
-			</tr>
-			<tr id="1">
-				<td>1</td>
-				<td>Derailler</td>
-				<td>Shimano</td>
-				<td>14.99</td>
-				<td><button onclick="showUpdate(this)">Update</button></td>
-				<td><button onclick="doDelete(this)">Deletes</button></td>
+		<button onclick="showCreate()">Create</button>
+		<table id="all_stock" class="items">		
 		</table>
 	</div>
 
 	<script>
-		function fillTable(){
-			stock = {
-				Item_number:2,
-				Item_name:"Tyre",
-				supplier:"Mercedes",
-				Price:24.99
-				}
-				addItemToStock(stock)
+		function showCreate(){
+			document.getElementById('show').style.display = "none"
+			document.getElementById('cre-ed').style.display = "block"
 		}
-		function addItemToStock(stock){
+		
+		function doCreate(){
+			console.log("do create")
+			stock_item = getStockItem()
+			showDisplay()
+		}
+		
+		function showDisplay(){
+			document.getElementById('show').style.display = "block"
+			document.getElementById('cre-ed').style.display = "none"
+		}
+		
+		
+		function getStockItem(){
+			var form = document.getElementById('creEdForm')
+			var stock_item = {} 
+			stock_item.Item_number = form.querySelector('input[name="Item_number"]').value
+			stock_item.Item_name = form.querySelector('input[name="Item_name"]').value
+			stock_item.supplier = form.querySelector('input[name="supplier"]').value
+			stock_item.Price = form.querySelector('input[name="Price"]').value
+			console.log(stock_item)
+			return stock_item
+		}
+			
+		function fillTable(){
+			$.ajax({
+				url:'http://127.0.0.1:5000/stock',
+				method:'GET',
+				datatype:'JSON',
+				success:function(results){
+					for (stock of results){
+						addItemToStock(stock)
+					}
+				},
+				error:function(xhr,status,error){
+					console.log("error"+error + "code:" +status)
+				}
+			})
+		
+		}
+		function addItemToStock(stock_item){
 			tableElem = document.getElementById("all_stock")
 			rowElem = tableElem.insertRow(-1)
 			rowElem.setAttribute("id",stock.Item_number)
@@ -70,7 +96,7 @@
 			cell5=rowElem.insertCell(4)
 			cell5.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
 			cell6=rowElem.insertCell(5)
-			cell6.innerHTML = '<button onclick="doDelete(this)">Deletes</button>'
+			cell6.innerHTML = '<button onclick="doDelete(this)">Delete</button>'
 		}
 		fillTable()
 	</script>
