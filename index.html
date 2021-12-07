@@ -1,4 +1,3 @@
-
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>  
@@ -10,7 +9,7 @@
 		<table id="creEdForm">
 			<tr>
 				<td>Item-number</td>
-				<td><input type="number" name="Item_number"></td>
+				<td><input type="number" name="Item_number" id="item_number_update"></td>
 			</tr>
 			<tr>
 				<td>Item-name</td>
@@ -25,7 +24,8 @@
 				<td><input type="currency" name="Price"></td>
 			</tr>
 			<tr>
-				<td></td><td><button id="cre-button" onclick="doCreate()">Create</button></td>
+			<td><button id="cre-button" onclick="doCreate()">Create</button></td>
+			<td><button id="upd-button" onclick="doUpdate()">Update</button></td>
 			</tr>
 		</table>
 	</div>
@@ -40,19 +40,67 @@
 		function showCreate(){
 			document.getElementById('show').style.display = "none"
 			document.getElementById('cre-ed').style.display = "block"
+			document.getElementById('upd-button').style.display = "none"
+			document.getElementById('cre-button').style.display = "block"
+		}
+		
+		function showUpdate(thisElem){
+			var rowElement = thisElem.parentNode.parentNode;
+			Item_number = FindItem(rowElement)
+			fillForm(stock_item)
+			
+			document.getElementById('item_number_update').value = Item_number
+			document.getElementById('item_number_update').disabled = true
+			
+			document.getElementById('show').style.display = "none"
+			document.getElementById('cre-ed').style.display = "block"
+			document.getElementById('upd-button').style.display = "block"
+			document.getElementById('cre-button').style.display = "none"
 		}
 		
 		function doCreate(){
-			console.log("do create")
+			console.log("in do create")
 			stock_item = getStockItem()
-			showDisplay()
-		}
+			console.log(stock_item)
+			$.ajax({
+				url:"/stock",
+				data:JSON.stringify(stock_item),
+				method:"POST",
+				dataType:"JSON",
+				contentType:"application/json; charset=utf-8",
+				success:function(result){
+					console.log(result)
+					addItemToStock(stock_item)
+					showDisplay()
+				},
+				error:function(xhr,status,error){
+				console.log("error"+error)
+				}
+			})
 		
+		}
+		function doDelete(thisElem){
+			var tableElement = document.getElementById('all_stock');
+			var rowElement = thisElem.parentNode.parentNode;
+			var index = rowElement.rowIndex;
+			Item_number = rowElement.getAttribute("id");
+			$.ajax({
+				url:"/stock/" + Item_number,
+				method:"DELETE",
+				dataType:"JSON",
+				success:function(result){
+					tableElement.deleteRow(index);
+				},
+				error:function(xhr,status,error){
+					console.log(error)
+				}
+			})
+		
+		}	
 		function showDisplay(){
 			document.getElementById('show').style.display = "block"
 			document.getElementById('cre-ed').style.display = "none"
 		}
-		
 		
 		function getStockItem(){
 			var form = document.getElementById('creEdForm')
@@ -61,7 +109,6 @@
 			stock_item.Item_name = form.querySelector('input[name="Item_name"]').value
 			stock_item.supplier = form.querySelector('input[name="supplier"]').value
 			stock_item.Price = form.querySelector('input[name="Price"]').value
-			console.log(stock_item)
 			return stock_item
 		}
 			
