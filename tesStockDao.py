@@ -1,6 +1,6 @@
 from StockDao import stockDao
 
-stock1 = {
+stock_item = {
     'Item_number': 3,
     'Item_name': 'Tyre',
     'supplier': 'Dunlop',
@@ -15,7 +15,7 @@ stock2 = {
     }
    
     
-#returnValue = stockDao.create(stock) 
+#returnValue = stockDao.create(stock_item) 
 returnValue = stockDao.getAll()   
 print(returnValue)
 returnValue = stockDao.findById(stock2['Item_number']) 

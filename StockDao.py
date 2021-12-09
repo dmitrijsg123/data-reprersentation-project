@@ -13,14 +13,14 @@ class StockDao:
         )
         # print("connection made")
         
-    def create(self,stock):
+    def create(self,stock_item):
         cursor = self.db.cursor()
         sql = "INSERT INTO STOCK (Item_number, Item_name, supplier, Price) values (%s,%s,%s,%s)"
         values = [
-            stock['Item_number'],
-            stock['Item_name'],
-            stock['supplier'],
-            stock['Price']
+            stock_item['Item_number'],
+            stock_item['Item_name'],
+            stock_item['supplier'],
+            stock_item['Price']
         ]
         cursor.execute(sql, values)
         self.db.commit()
@@ -48,7 +48,7 @@ class StockDao:
        
         return self.convertToDict(result)
         
-    def update(self,stock):
+    def update(self,stock_item):
         cursor = self.db.cursor()
         sql = "UPDATE STOCK SET Item_number = %s, supplier = %s, Price = %s WHERE Item_number  = %s"
         values = [
@@ -71,11 +71,11 @@ class StockDao:
     
     def convertToDict(self,result):
         colnames = ['Item_number','Item_name','supplier','Price']
-        stock = {}
+        stock_item = {}
             
         if result:
             for i, colName in enumerate(colnames):
                 value = result[i]
-                stock[colName] = value
-        return stock
+                stock_item[colName] = value
+        return stock_item
 stockDao = StockDao()
