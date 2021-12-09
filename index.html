@@ -25,7 +25,7 @@
 			</tr>
 			<tr>
 			<td><button id="cre-button" onclick="doCreate()">Create</button></td>
-			<td><button id="upd-button" onclick="doUpdate()">Update</button></td>
+			<td><button id="upd-button" onclick="stockUpdate()">Update</button></td>
 			</tr>
 		</table>
 	</div>
@@ -46,17 +46,48 @@
 		
 		function showUpdate(thisElem){
 			var rowElement = thisElem.parentNode.parentNode;
-			Item_number = FindItem(rowElement)
+			stock_item = findItem(rowElement)
 			fillForm(stock_item)
-			
-			document.getElementById('item_number_update').value = Item_number
-			document.getElementById('item_number_update').disabled = true
 			
 			document.getElementById('show').style.display = "none"
 			document.getElementById('cre-ed').style.display = "block"
 			document.getElementById('upd-button').style.display = "block"
 			document.getElementById('cre-button').style.display = "none"
 		}
+		
+		function findItem(rowElement){
+			stock_item = {}
+			stock_item.Item_number = rowElement.getAttribute("id");
+			stock_item.Item_name = rowElement.cells[1].firstChild.textContent
+			stock_item.supplier = rowElement.cells[2].firstChild.textContent
+			stock_item.Price = rowElement.cells[3].firstChild.textContent
+			return stock_item
+		}
+		
+		function fillForm(stock_item){
+			var form = document.getElementById('creEdForm')
+			
+			form.querySelector('input[name="Item_number"]').value = stock_item.Item_number
+			form.querySelector('input[name="Item_number"]').disabled = true
+			
+			form.querySelector('input[name="Item_name"]').value = stock_item.Item_name
+			form.querySelector('input[name="supplier"]').value = stock_item.supplier
+			form.querySelector('input[name="Price"]').value = stock_item.Price
+			
+		}
+		
+		function erasePrevious(){
+			var form = document.getElementById('creEdForm')
+			
+			form.querySelector('input[name="Item_number"]').value = ''
+			form.querySelector('input[name="Item_number"]').disabled = false
+			
+			form.querySelector('input[name="Item_name"]').value = ''
+			form.querySelector('input[name="supplier"]').value = ''
+			form.querySelector('input[name="Price"]').value = ''
+			
+		}
+		
 		
 		function doCreate(){
 			console.log("in do create")
@@ -72,6 +103,7 @@
 					console.log(result)
 					addItemToStock(stock_item)
 					showDisplay()
+					erasePrevious()
 				},
 				error:function(xhr,status,error){
 				console.log("error"+error)
@@ -79,6 +111,40 @@
 			})
 		
 		}
+		
+		function stockUpdate(){
+			stock_item = getStockItem()
+			serverUpdate(stock_item)
+			erasePrevious()
+			
+		}
+		
+		function serverUpdate(stock_item){
+			$.ajax({
+				url:"/stock/" + stock_item.Item_number,
+				data:JSON.stringify(stock_item),
+				method:"PUT",
+				dataType:"JSON",
+				contentType:"application/json; charset=utf-8",
+				success:function(result){
+					console.log(result)
+					stockItemUpdate(stock_item)
+					showDisplay()
+					erasePrevious()
+				},
+				error:function(xhr,status,error){
+				console.log("error"+error)
+				}
+			})
+		}
+		
+		function stockItemUpdate(stock_item){
+			rowElement = document.getElementById(stock_item.Item_number)
+            rowElement.cells[1].firstChild.textContent = stock_item.Item_name
+            rowElement.cells[2].firstChild.textContent = stock_item.supplier
+            rowElement.cells[3].firstChild.textContent = stock_item.Price
+		}
+		
 		function doDelete(thisElem){
 			var tableElement = document.getElementById('all_stock');
 			var rowElement = thisElem.parentNode.parentNode;
@@ -101,7 +167,7 @@
 			document.getElementById('show').style.display = "block"
 			document.getElementById('cre-ed').style.display = "none"
 		}
-		
+				
 		function getStockItem(){
 			var form = document.getElementById('creEdForm')
 			var stock_item = {} 
