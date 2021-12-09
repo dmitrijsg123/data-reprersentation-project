@@ -1,4 +1,4 @@
-# data-reprersentation-project
+# data-representation-project
 Data Representation Project
 
 python -m venv venv
