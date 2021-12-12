@@ -1,222 +1,120 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>MIKE'S BIKES</title>
+  <style>
+
+body{
+background-color: turquoise; 
+}
+
+footer{
+  text-align: center;
+  font-size: 15px;
+}
+
+#topheading{
+   
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom:30px;
+  margin-top: 200px;
+}
+
+#bikes2.jpg{
+  max-width:100%;
+  height:600px;
+  display: block; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#div2{
+    background-image:url(bikes2.jpg); 
+    size: 300px 200px;  
+}
+h3{
+    text-align: center;
+}
+
+/* Login parameters */
+.login{
+font-size:60px;
+font-family: 'Times New Roman', Times, serif;
+margin-top:270px;
+text-align:center;
+border-color: blue;
+}
+
+</style>
 </head>
-
 <body>
-	<div id="cre-ed" style="display:none">
-	<h3>Create and edit section</h3>
-		<table id="creEdForm">
-			<tr>
-				<td>Item-number</td>
-				<td><input type="number" name="Item_number" id="item_number_update"></td>
-			</tr>
-			<tr>
-				<td>Item-name</td>
-				<td><input type="text" name="Item_name"></td>
-			</tr>
-			<tr>
-				<td>supplier</td>
-				<td><input type="text" name="supplier"></td>
-			</tr>
-			<tr>
-				<td>Price</td>
-				<td><input type="currency" name="Price"></td>
-			</tr>
-			<tr>
-			<td><button id="cre-button" onclick="doCreate()">Create</button></td>
-			<td><button id="upd-button" onclick="stockUpdate()">Update</button></td>
-			</tr>
-		</table>
-	</div>
-	<div id="show">
-		<h2>All stock</h2>
-		<button onclick="showCreate()">Create</button>
-		<table id="all_stock" class="items">		
-		</table>
-	</div>
 
-	<script>
-		function showCreate(){
-			document.getElementById('show').style.display = "none"
-			document.getElementById('cre-ed').style.display = "block"
-			document.getElementById('upd-button').style.display = "none"
-			document.getElementById('cre-button').style.display = "block"
-		}
-		
-		function showUpdate(thisElem){
-			var rowElement = thisElem.parentNode.parentNode;
-			stock_item = findItem(rowElement)
-			fillForm(stock_item)
-			
-			document.getElementById('show').style.display = "none"
-			document.getElementById('cre-ed').style.display = "block"
-			document.getElementById('upd-button').style.display = "block"
-			document.getElementById('cre-button').style.display = "none"
-		}
-		
-		function findItem(rowElement){
-			stock_item = {}
-			stock_item.Item_number = rowElement.getAttribute("id");
-			stock_item.Item_name = rowElement.cells[1].firstChild.textContent
-			stock_item.supplier = rowElement.cells[2].firstChild.textContent
-			stock_item.Price = rowElement.cells[3].firstChild.textContent
-			return stock_item
-		}
-		
-		function fillForm(stock_item){
-			var form = document.getElementById('creEdForm')
-			
-			form.querySelector('input[name="Item_number"]').value = stock_item.Item_number
-			form.querySelector('input[name="Item_number"]').disabled = true
-			
-			form.querySelector('input[name="Item_name"]').value = stock_item.Item_name
-			form.querySelector('input[name="supplier"]').value = stock_item.supplier
-			form.querySelector('input[name="Price"]').value = stock_item.Price
-			
-		}
-		
-		function erasePrevious(){
-			var form = document.getElementById('creEdForm')
-			
-			form.querySelector('input[name="Item_number"]').value = ''
-			form.querySelector('input[name="Item_number"]').disabled = false
-			
-			form.querySelector('input[name="Item_name"]').value = ''
-			form.querySelector('input[name="supplier"]').value = ''
-			form.querySelector('input[name="Price"]').value = ''
-			
-		}
-		
-		
-		function doCreate(){
-			console.log("in do create")
-			stock_item = getStockItem()
-			console.log(stock_item)
-			$.ajax({
-				url:"/stock",
-				data:JSON.stringify(stock_item),
-				method:"POST",
-				dataType:"JSON",
-				contentType:"application/json; charset=utf-8",
-				success:function(result){
-					console.log(result)
-					addItemToStock(stock_item)
-					showDisplay()
-					erasePrevious()
-				},
-				error:function(xhr,status,error){
-				console.log("error"+error)
-				}
-			})
-		
-		}
-		
-		function stockUpdate(){
-			stock_item = getStockItem()
-			serverUpdate(stock_item)
-			erasePrevious()
-			
-		}
-		
-		function serverUpdate(stock_item){
-			$.ajax({
-				url:"/stock/" + stock_item.Item_number,
-				data:JSON.stringify(stock_item),
-				method:"PUT",
-				dataType:"JSON",
-				contentType:"application/json; charset=utf-8",
-				success:function(result){
-					console.log(result)
-					stockItemUpdate(stock_item)
-					showDisplay()
-					erasePrevious()
-				},
-				error:function(xhr,status,error){
-				console.log("error"+error)
-				}
-			})
-		}
-		
-		function stockItemUpdate(stock_item){
-			rowElement = document.getElementById(stock_item.Item_number)
-            rowElement.cells[1].firstChild.textContent = stock_item.Item_name
-            rowElement.cells[2].firstChild.textContent = stock_item.supplier
-            rowElement.cells[3].firstChild.textContent = stock_item.Price
-		}
-		
-		function doDelete(thisElem){
-			var tableElement = document.getElementById('all_stock');
-			var rowElement = thisElem.parentNode.parentNode;
-			var index = rowElement.rowIndex;
-			Item_number = rowElement.getAttribute("id");
-			$.ajax({
-				url:"/stock/" + Item_number,
-				method:"DELETE",
-				dataType:"JSON",
-				success:function(result){
-					tableElement.deleteRow(index);
-				},
-				error:function(xhr,status,error){
-					console.log(error)
-				}
-			})
-		
-		}	
-		function showDisplay(){
-			document.getElementById('show').style.display = "block"
-			document.getElementById('cre-ed').style.display = "none"
-		}
-				
-		function getStockItem(){
-			var form = document.getElementById('creEdForm')
-			var stock_item = {} 
-			stock_item.Item_number = form.querySelector('input[name="Item_number"]').value
-			stock_item.Item_name = form.querySelector('input[name="Item_name"]').value
-			stock_item.supplier = form.querySelector('input[name="supplier"]').value
-			stock_item.Price = form.querySelector('input[name="Price"]').value
-			return stock_item
-		}
-			
-		function fillTable(){
-			$.ajax({
-				url:'http://127.0.0.1:5000/stock',
-				method:'GET',
-				datatype:'JSON',
-				success:function(results){
-					for (stock of results){
-						addItemToStock(stock)
-					}
-				},
-				error:function(xhr,status,error){
-					console.log("error"+error + "code:" +status)
-				}
-			})
-		
-		}
-		function addItemToStock(stock_item){
-			tableElem = document.getElementById("all_stock")
-			rowElem = tableElem.insertRow(-1)
-			rowElem.setAttribute("id",stock.Item_number)
-			cell1=rowElem.insertCell(0)
-			cell1.innerHTML = stock.Item_number
-			cell2=rowElem.insertCell(1)
-			cell2.innerHTML = stock.Item_name
-			cell3=rowElem.insertCell(2)
-			cell3.innerHTML = stock.supplier
-			cell4=rowElem.insertCell(3)
-			cell4.innerHTML = stock.Price
-			cell5=rowElem.insertCell(4)
-			cell5.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
-			cell6=rowElem.insertCell(5)
-			cell6.innerHTML = '<button onclick="doDelete(this)">Delete</button>'
-		}
-		fillTable()
-	</script>
+
+  <div id="topheading">
+    <br>
+        <h1 style="color: rgb(33, 126, 33); font-size: 150px; text-align: center;">Mike's bikes</h1>  
+        <br><br>
+  </div>
+
+  <div>
+    <br>
+        <h3>You have entered Mike's Bikes internal stock inventory site. <br>
+        Enter username and password to log in</h3>  
+        <br><br>
+  </div>
+  
+  <div id="div2">
+
+    <!-- Form box -->
+    <form class="login">
+        <input type="text" name="username" id="username" Placeholder="Enter username"><br>
+        <input type="password" name="password" id="password" Placeholder="Enter password"><br>
+        <!-- event created - function activated on click -->
+        <button onclick="user()">Enter</button>
+
+       
+      </form>
+<br>
+</div>
+
+<footer>
+  <p id="foot">Mike's bikes | All Rights Reserved 2021.
+
+</footer>
+
 </body>
 
+<script>
 
-
-
+  // login credentials validation 
+  // Username - 1234
+  // Password - 1234
+  function user() {
+  
+    // Make "user" variable equal to value input box called "username"
+  var user = document.getElementById('username').value
+  
+  // Make "pass" variable equal to value input box called "password"
+  var pass = document.getElementById('password').value
+  
+  // If-else condition created - If both "user" value is equal to "1234" and "password" value is equal to "1234" then load page indexlogin.html"
+  if (user == "1234" && pass == "1234") {
+  window.open("index_login.html")
+  
+  // Otherwise alert box pops up "Usename and/or password incorrect. Enter again"
+  } else {
+  alert('Usename and/or password incorrect. Enter again')
+  }
+  }
+</script>
 
 </html>
+
+
+
+
+    
+    

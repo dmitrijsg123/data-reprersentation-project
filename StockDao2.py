@@ -1,8 +1,9 @@
 
 
+
 import mysql.connector
 
-class StockDao:
+class StockDao2:
     db = ""
     def __init__(self):
         self.db = mysql.connector.connect(
@@ -11,11 +12,12 @@ class StockDao:
             password = '',
             database = 'datarep'
         )
-     
         
-    def create(self,stock_item):
+        # 2nd table
+        
+    def create2(self,stock_item):
         cursor = self.db.cursor()
-        sql = "INSERT INTO STOCK (Item_number, Item_name, supplier, Price) values (%s,%s,%s,%s)"
+        sql = "INSERT INTO STOCKK (Item_number, Item_name, supplier, Price) values (%s,%s,%s,%s)"
         values = [
             stock_item['Item_number'],
             stock_item['Item_name'],
@@ -26,49 +28,49 @@ class StockDao:
         self.db.commit()
         return cursor.lastrowid
     
-    def getAll(self):
+    def getAll2(self):
         cursor = self.db.cursor()
-        sql = "SELECT * FROM STOCK"
+        sql = "SELECT * FROM STOCKK"
         cursor.execute(sql)
         results = cursor.fetchall()
         returnArray = []
         for result in results:
-            resultAsDict = self.convertToDict(result)
+            resultAsDict = self.convertToDict2(result)
             returnArray.append(resultAsDict)
             
         return returnArray
         
-    def findById(self, Item_number):
+    def findById2(self, Item_number):
         cursor = self.db.cursor()
-        sql = "SELECT * FROM STOCK WHERE Item_number = %s"
+        sql = "SELECT * FROM STOCKK WHERE Item_number = %s"
         values = [Item_number]
         cursor.execute(sql,values)
         result = cursor.fetchone()
        
-        return self.convertToDict(result)
+        return self.convertToDict2(result)
         
-    def update(self,stock_item):
+    def update2(self,stock_item):
         cursor = self.db.cursor()
-        sql = "UPDATE STOCK SET Item_number = %s, supplier = %s, Price = %s WHERE Item_number  = %s"
+        sql = "UPDATE STOCKK SET Item_number = %s, supplier = %s, Price = %s WHERE Item_number  = %s"
         values = [
-            stock['Item_number'],
-            stock['Item_name'],
-            stock['supplier'],
-            stock['Price']
+            stockk['Item_number'],
+            stockk['Item_name'],
+            stockk['supplier'],
+            stockk['Price']
         ]
         cursor.execute(sql, values)
         self.db.commit()
-        return stock
+        return stockk
         
-    def delete(self,Item_number):
+    def delete2(self,Item_number):
         cursor = self.db.cursor()
-        sql = "DELETE FROM STOCK WHERE Item_number = %s"
+        sql = "DELETE FROM STOCKK WHERE Item_number = %s"
         values = [Item_number]
         cursor.execute(sql,values)
 
         return {}
     
-    def convertToDict(self,result):
+    def convertToDict2(self,result):
         colnames = ['Item_number','Item_name','supplier','Price']
         stock_item = {}
             
@@ -78,4 +80,4 @@ class StockDao:
                 stock_item[colName] = value
         return stock_item
         
-stockDao = StockDao()
+stockDao2 = StockDao2()
