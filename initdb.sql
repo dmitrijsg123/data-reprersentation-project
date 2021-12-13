@@ -7,3 +7,10 @@ CREATE TABLE STOCK(
     -> supplier varchar(30),
     -> Price int
 	);
+
+CREATE TABLE STOCKK(
+    -> Item_number int PRIMARY KEY,
+    -> Item_name varchar(50),
+    -> supplier varchar(30),
+    -> Price int
+	);
