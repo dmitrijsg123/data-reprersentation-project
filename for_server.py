@@ -1,9 +1,10 @@
 from flask import Flask, url_for,redirect,abort, request, jsonify
 from StockDao import stockDao
 from StockDao2 import stockDao2
+from flask_cors import CORS
 
 app = Flask(__name__,static_url_path='',static_folder='staticpages') 
-
+CORS(app)
 
 @app.route('/')     
 def index():
