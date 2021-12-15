@@ -217,8 +217,10 @@ margin-right:auto;
 		
 		function showUpdate(thisElem){
 			var rowElement = thisElem.parentNode.parentNode;
+			Item_number = rowElement.getAttribute("id");
 			stock_item = findItem(rowElement)
 			fillForm(stock_item)
+			
 			
 			document.getElementById('show').style.display = "none"
 			document.getElementById('cre-ed').style.display = "block"
@@ -236,7 +238,7 @@ margin-right:auto;
 		}
 		
 		function fillForm(stock_item){
-			var form = document.getElementById('creEdForm2')
+			var form = document.getElementById('creEdForm')
 			
 			form.querySelector('input[name="Item_number"]').value = stock_item.Item_number
 			form.querySelector('input[name="Item_number"]').disabled = true
