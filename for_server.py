@@ -117,5 +117,5 @@ def delete2(Item_number):
 
 
 if __name__ == '__main__':
-    print("in if")
+    
     app.run(debug=True)                     
